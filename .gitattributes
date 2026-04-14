@@ -1,0 +1,10 @@
+# Force shell scripts and wrapper files to use LF line endings (required for Linux/Docker)
+mvnw text eol=lf
+*.sh text eol=lf
+
+# Windows batch files should be CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Default: let Git handle it
+* text=auto
