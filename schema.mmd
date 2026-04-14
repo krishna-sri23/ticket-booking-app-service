@@ -1,0 +1,147 @@
+erDiagram
+    CITY ||--o{ THEATRE : "has"
+    THEATRE ||--o{ SCREEN : "contains"
+    SCREEN ||--o{ SEAT : "has"
+    SCREEN ||--o{ SHOW : "hosts"
+    MOVIE ||--o{ SHOW : "scheduled_in"
+    SHOW ||--o{ SHOW_SEAT : "has"
+    SEAT ||--o{ SHOW_SEAT : "instance_of"
+    USER ||--o{ BOOKING : "makes"
+    SHOW ||--o{ BOOKING : "for"
+    BOOKING ||--o{ BOOKING_SEAT : "includes"
+    SHOW_SEAT ||--o| BOOKING_SEAT : "booked_as"
+    OFFER ||--o{ OFFER_RULE : "has"
+    OFFER ||--o{ OFFER_CITY : "scoped_to"
+    OFFER ||--o{ OFFER_THEATRE : "scoped_to"
+    CITY ||--o{ OFFER_CITY : "included_in"
+    THEATRE ||--o{ OFFER_THEATRE : "included_in"
+    BOOKING ||--o{ BOOKING_OFFER : "applied"
+    OFFER ||--o{ BOOKING_OFFER : "used_in"
+
+    CITY {
+        bigint id PK
+        varchar name
+        varchar state
+        varchar country
+    }
+
+    THEATRE {
+        bigint id PK
+        varchar name
+        varchar address
+        bigint city_id FK
+        int total_screens
+        varchar status
+    }
+
+    SCREEN {
+        bigint id PK
+        bigint theatre_id FK
+        varchar name
+        int total_seats
+    }
+
+    SEAT {
+        bigint id PK
+        bigint screen_id FK
+        varchar seat_number
+        varchar row_label
+        varchar seat_type
+    }
+
+    MOVIE {
+        bigint id PK
+        varchar title
+        varchar language
+        varchar genre
+        int duration_minutes
+        date release_date
+        varchar rating
+    }
+
+    SHOW {
+        bigint id PK
+        bigint movie_id FK
+        bigint screen_id FK
+        date show_date
+        time start_time
+        time end_time
+        decimal base_price
+        varchar status
+    }
+
+    SHOW_SEAT {
+        bigint id PK
+        bigint show_id FK
+        bigint seat_id FK
+        varchar status
+        decimal price
+        int version
+    }
+
+    USER {
+        bigint id PK
+        varchar name
+        varchar email UK
+        varchar phone
+        varchar role
+    }
+
+    BOOKING {
+        bigint id PK
+        bigint user_id FK
+        bigint show_id FK
+        decimal total_amount
+        decimal discount
+        decimal final_amount
+        varchar status
+        timestamp booked_at
+    }
+
+    BOOKING_SEAT {
+        bigint id PK
+        bigint booking_id FK
+        bigint show_seat_id FK
+    }
+
+    OFFER {
+        bigint id PK
+        varchar code UK
+        varchar name
+        varchar description
+        varchar discount_type
+        decimal discount_value
+        varchar applies_to
+        int nth_ticket_number
+        int priority
+        boolean stackable
+        boolean active
+        date valid_from
+        date valid_until
+    }
+
+    OFFER_RULE {
+        bigint id PK
+        bigint offer_id FK
+        varchar rule_type
+        varchar rule_value
+    }
+
+    OFFER_CITY {
+        bigint id PK
+        bigint offer_id FK
+        bigint city_id FK
+    }
+
+    OFFER_THEATRE {
+        bigint id PK
+        bigint offer_id FK
+        bigint theatre_id FK
+    }
+
+    BOOKING_OFFER {
+        bigint id PK
+        bigint booking_id FK
+        bigint offer_id FK
+        decimal discount_applied
+    }
