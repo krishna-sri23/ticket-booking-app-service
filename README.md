@@ -51,6 +51,10 @@ Install MySQL 8 locally, create DB `booking_platform`, update `application.yml`,
 | GET | `/api/v1/shows/{showId}/seats` | Get seat availability for a show |
 | POST | `/api/v1/bookings` | **WRITE scenario**: book tickets with auto discount |
 | GET | `/api/v1/bookings/{bookingId}` | Booking details |
+| DELETE | `/api/v1/bookings/{bookingId}` | Cancel booking and release seats |
+| POST | `/api/v1/admin/shows` | Admin: create show (auto-provisions seat inventory) |
+| PUT | `/api/v1/admin/shows/{showId}` | Admin: update show |
+| DELETE | `/api/v1/admin/shows/{showId}` | Admin: delete show (no active bookings) |
 | GET | `/api/v1/offers` | List active offers |
 | GET | `/health` | Health check |
 

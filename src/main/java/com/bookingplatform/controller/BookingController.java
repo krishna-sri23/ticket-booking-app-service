@@ -31,4 +31,10 @@ public class BookingController {
     public BookingResponse getBooking(@PathVariable Long bookingId) {
         return bookingService.getBooking(bookingId);
     }
+
+    @Operation(summary = "Cancel a booking and release its seats")
+    @DeleteMapping("/{bookingId}")
+    public BookingResponse cancelBooking(@PathVariable Long bookingId) {
+        return bookingService.cancelBooking(bookingId);
+    }
 }

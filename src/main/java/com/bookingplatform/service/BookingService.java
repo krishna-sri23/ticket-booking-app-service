@@ -127,6 +127,32 @@ public class BookingService {
         return toResponse(saved, seats, applied);
     }
 
+    @Transactional
+    public BookingResponse cancelBooking(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found: " + bookingId));
+        if (booking.getStatus() == BookingStatus.CANCELLED) {
+            throw new com.bookingplatform.exception.BookingException("Booking already cancelled");
+        }
+
+        List<Long> seatIds = booking.getBookingSeats().stream()
+                .map(bs -> bs.getShowSeat().getId())
+                .toList();
+        List<ShowSeat> seats = showSeatRepository.findAllByIdForUpdate(seatIds);
+        for (ShowSeat ss : seats) {
+            ss.setStatus(ShowSeatStatus.AVAILABLE);
+        }
+
+        booking.setStatus(BookingStatus.CANCELLED);
+        Booking saved = bookingRepository.save(booking);
+        log.info("Booking {} cancelled; {} seats released", bookingId, seats.size());
+
+        List<AppliedOffer> applied = saved.getBookingOffers().stream()
+                .map(bo -> new AppliedOffer(bo.getOffer(), bo.getDiscountApplied()))
+                .toList();
+        return toResponse(saved, seats, applied);
+    }
+
     @Transactional(readOnly = true)
     public BookingResponse getBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)

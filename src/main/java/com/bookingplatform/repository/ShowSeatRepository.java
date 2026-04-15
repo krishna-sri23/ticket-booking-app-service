@@ -19,4 +19,6 @@ public interface ShowSeatRepository extends JpaRepository<ShowSeat, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT ss FROM ShowSeat ss WHERE ss.id IN :ids")
     List<ShowSeat> findAllByIdForUpdate(@Param("ids") List<Long> ids);
+
+    void deleteByShowId(Long showId);
 }
